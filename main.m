@@ -1,9 +1,10 @@
 
-%System Dynamic Matrix A (Open Loop System)
 %This is a second order system
 n = 2; 
-A = [0 1
-     0 0];
+
+%System State Matrix
+A =  [1 1
+      0 1];
  
 %System Control Matrix
 B = [0 1]';
@@ -11,12 +12,15 @@ B = [0 1]';
 %System Output Matrix
 C = [2 0];
 
+%System Feedthrough Matrix
+D = 0;
+
 %Initial State Values
 x0 = [1; -2];
 
 %Check For Necessary Conditions
-controlability = [B A*B];
-observability = [C 
+controlability_m = [B A*B];
+observability_m = [C 
                  C*A]';
 G = C'*C;
 
@@ -26,25 +30,38 @@ Q = [8 0 %State Cost
      0 0] ;
 N = 0; 
 
+%Open-Loop Eigenvalues
+OL_Eig = eig(A);
+
 %Solving For Optimal Feedback Gain
 %Making sure both observability and controlability matrices are full rank
-if rank(controlability) == n && rank(observability) == n
+if rank(controlability_m) == n && rank(observability_m) == n
     [F, K, e] = lqr(A, B, Q, R, N);
 end
+
+%Unity Feedback gain/ Chosen Feedback gain (Comment out to stop)
+%This just to interupt the feedback gain F calculated from lqr()
+%F = [5 5];
+
+%Riccati solution
+riccati_solution_K = K
+
+%Closed loop eigen values
+CL_eig = eig(A-B*F)
 
 %Optimal Control
 syms x1(t) x2(t) p1(t) p2(t) u(t) t
 x = [x1; x2];
-u_opt = -F*x;
+system = A*x + B*u
+u_opt = -F*x
 
 %Optimal trajectory using closed loop system
 time = linspace(0, 10);
-x_prime_opt = [x2; u];
-x_prime_opt = subs(x_prime_opt, u, u_opt);
-x_prime_opt = diff(x) == x_prime_opt;
+closed_loop_system = subs(system, u, u_opt);
+closed_loop_system = diff(x) == closed_loop_system;
 cond = x(0) == x0;
 
-[x1_opt(t), x2_opt(t)] = dsolve(x_prime_opt, cond);
+[x1_opt(t), x2_opt(t)] = dsolve(closed_loop_system, cond);
 u_opt = @(t) -F*[x1_opt(t); x2_opt(t)];
 
 %Optimal Performance Criteria J
