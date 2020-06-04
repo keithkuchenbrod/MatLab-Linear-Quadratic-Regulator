@@ -1,11 +1,11 @@
-###<ins>MatLab Linear Quadratic Regulator Script</ins>
+### <ins>MatLab Linear Quadratic Regulator Script</ins>
 
-####To run script
+#### To run script
 
 * Make sure both lqr.m and main.m are in the same folder
 * Run main.m 
 
-####<ins>Example problem</ins>
+#### <ins>Example problem</ins>
 
 For part of my final project for my Optimal Control Design class I had 
 to write a script that would solve for the optimal trajectories and control of a second order linear quadratic regulator problem.
