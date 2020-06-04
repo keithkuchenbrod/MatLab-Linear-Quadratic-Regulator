@@ -1,6 +1,6 @@
 ### <ins>MatLab Linear Quadratic Regulator Script</ins>
 
-#### To run script
+#### <ins>To run script</ins>
 
 * Make sure both lqr.m and main.m are in the same folder
 * Run main.m 
